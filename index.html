@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>as2-json-plus</title>
+  <style>
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: #fff;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    .hint {
+      padding: 12px 16px;
+      color: #555;
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
+    }
+    /* 残りの高さを全部使うコンテナ */
+    #container {
+      flex: 1 1 auto;
+      min-height: 0;            /* Chrome/Safariでのオーバーフロー抑止 */
+      background: #f7f7f7;      /* レターボックス時の背景 */
+    }
+    /* ruffle-player をビューいっぱいに広げる */
+    ruffle-player,
+    #container > ruffle-player {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="hint">※ Ruffle + 日本語フォント（Noto Sans JP Regular）設定済み</div>
+  <div id="container"></div>
+
+  <script>
+    // --- Ruffle 設定（Noto Sans JP Regular を読み込んで全系統に割り当て） ---
+    window.RufflePlayer = window.RufflePlayer || {};
+    window.RufflePlayer.config = {
+      fontSources: ["./NotoSansJP-Regular.ttf"],
+      defaultFonts: {
+        sans: ["Noto Sans JP", "Noto Sans JP Regular"],
+        serif: ["Noto Sans JP", "Noto Sans JP Regular"],
+        typewriter: ["Noto Sans JP", "Noto Sans JP Regular"]
+      },
+      fallbackFonts: {
+        sans: ["Noto Sans JP", "Noto Sans JP Regular"],
+        serif: ["Noto Sans JP", "Noto Sans JP Regular"],
+        typewriter: ["Noto Sans JP", "Noto Sans JP Regular"]
+      }
+    };
+
+    // --- Ruffle プレイヤー生成＆SWF読み込み ---
+    window.addEventListener("load", () => {
+      const ruffle = window.RufflePlayer.newest();
+      const player = ruffle.createPlayer();
+
+      // 重要：幅/高さを 100%（CSS と二重に指定しておくと確実）
+      player.style.width = "100%";
+      player.style.height = "100%";
+
+      document.getElementById("container").appendChild(player);
+      // 同じフォルダに置いた SWF を読み込む
+      player.ruffle().load("./json_parse_as2.swf");
+    });
+  </script>
+
+  <!-- Ruffle 本体 -->
+  <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+</body>
+</html>
